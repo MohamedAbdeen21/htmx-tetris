@@ -1,0 +1,8 @@
+{{ define "content" }}
+<div>
+	{{ block "counter" . }}
+	<h1> Count {{ . }} </h1>
+	{{ end }}
+	<button hx-post="/update" hx-target="previous" hx-swap="outerHTML"> Click </button>
+</div>
+{{ end }}
