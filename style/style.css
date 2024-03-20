@@ -1,0 +1,90 @@
+body {
+	background-color: #f0f0f0;
+}
+
+.game {
+	background-color: #f0f0f0;
+	display: grid;
+	place-items: center;
+	height: 100vh;
+	grid-template-rows: 100px 600px 150px;
+}
+
+.state,
+.gameover,
+.scoreboard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+}
+
+.scoreboard {
+	grid-row-start: 1;
+}
+
+.scoreboard h1 {
+	margin: 0 0 0 0;
+}
+
+.state {
+	grid-row-start: 2;
+}
+
+.gameover {
+	grid-row-start: 3;
+	animation: blinker 2s ease-in-out infinite;
+}
+
+@keyframes blinker {
+	50% {
+		opacity: 0;
+	}
+}
+
+.tetris-grid {
+	display: grid;
+	justify-items: center;
+	gap: 0px;
+	border: 1px solid #333;
+}
+
+.tetris-cell {
+	width: 30px;
+	height: 30px;
+	border: 1px solid black;
+	background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+	box-shadow: inset -2px -2px 6px rgba(255, 255, 255, 1);
+}
+
+.tetris-cell.E {
+	background-color: white;
+}
+
+.tetris-cell.I {
+	background-color: cyan;
+}
+
+.tetris-cell.J {
+	background-color: blue;
+}
+
+.tetris-cell.L {
+	background-color: orange;
+}
+
+.tetris-cell.O {
+	background-color: magenta;
+}
+
+.tetris-cell.S {
+	background-color: lime;
+}
+
+.tetris-cell.T {
+	background-color: purple;
+}
+
+.tetris-cell.Z {
+	background-color: red;
+}

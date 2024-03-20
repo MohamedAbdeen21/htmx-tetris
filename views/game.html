@@ -1,0 +1,27 @@
+{{ define "game" }}
+<div class="game" hx-post="/tick" hx-trigger="every 1s, keydown[key=='h'||key=='j'||key=='l'] from:body">
+	{{ block "state" . }}
+	<div class="scoreboard">
+		<h1> Score </h1>
+		<h1> {{ .Score }} </h1>
+	</div>
+	<div class="state">
+		<table class="tetris-grid">
+			{{ range .State }}
+			<tr>
+				{{ range . }} <td class="tetris-cell {{.}}"> </td> {{ end }}
+			</tr>
+			{{ end }}
+		</table>
+	</div>
+	{{ if .GameOver }}
+	<div class="gameover">
+		<h1> Game Over</h1>
+		<div hx-get="/restart" hx-trigger="keydown[key=='r'] from:body" hx-target=".game" hx-swap="outerHTML">
+			Press r to restart
+		</div>
+	</div>
+	{{ end }}
+	{{ end }}
+</div>
+{{end}}

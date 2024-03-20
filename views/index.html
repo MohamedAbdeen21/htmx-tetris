@@ -8,11 +8,22 @@
 	<script src="https://unpkg.com/htmx.org@1.9.11"
 		integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
 		crossorigin="anonymous"></script>
-	<title>Document</title>
+	<link rel="stylesheet" href="/style/style.css">
+	<title>Tetris</title>
 </head>
 
 <body>
-	{{ template "content" . }}
+	{{ template "game" . }}
+
+	<script>
+		document.body.addEventListener('htmx:configRequest', (event) => {
+			if (event.detail.triggeringEvent == null) {
+				return // triggered by the 'every' event 
+			}
+
+			event.detail.headers['Action'] = event.detail.triggeringEvent.key
+		})
+	</script>
 </body>
 
 </html>

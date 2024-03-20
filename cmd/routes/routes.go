@@ -1,18 +1,44 @@
 package routes
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+	"tetris/game"
+	"tetris/game/actions"
+)
 
-func Root(w http.ResponseWriter, r *http.Request) {
+var games = make(map[string]*game.Game)
+
+func Root(w http.ResponseWriter, _ *http.Request) {
 	// TODO: Middleware to stop longest match
-	if r.URL.Path != "/" {
-		http.Error(w, "No route", http.StatusInternalServerError)
-		return
-	}
-
-	render(w, "index", count)
+	g := game.NewGame()
+	games["ip"] = g
+	render(w, "index", g)
 }
 
-func Update(w http.ResponseWriter, r *http.Request) {
-	count++
-	render(w, "counter", count)
+func Tick(w http.ResponseWriter, r *http.Request) {
+	game, found := games["ip"]
+	if !found {
+		log.Printf("%#v", games)
+	}
+	action := r.Header["Action"]
+
+	if len(action) == 0 {
+		game.Tick(actions.Down)
+	} else {
+		game.Tick(actions.Action(action[0]))
+	}
+
+	if game.GameOver {
+		w.WriteHeader(286) // stops HTMX polling
+	}
+
+	render(w, "state", game)
+}
+
+func Restart(w http.ResponseWriter, _ *http.Request) {
+	game := games["ip"]
+	game.Restart()
+
+	render(w, "game", game)
 }

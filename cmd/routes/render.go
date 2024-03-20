@@ -7,7 +7,6 @@ import (
 )
 
 var tmpl = template.New("")
-var count = 0
 
 func init() {
 	var err error
