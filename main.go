@@ -17,7 +17,7 @@ func main() {
 
 	http.HandleFunc("GET /", routes.Root)
 	http.HandleFunc("POST /tick", routes.Tick)
-	http.HandleFunc("POST /restart", routes.Restart)
+	http.HandleFunc("GET /restart", routes.Restart)
 
 	log.Print("Starting server on port 8080")
 	log.Fatal(
