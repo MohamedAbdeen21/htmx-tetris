@@ -40,7 +40,11 @@ func Tick(w http.ResponseWriter, r *http.Request) {
 
 func Restart(w http.ResponseWriter, _ *http.Request) {
 	game := games["ip"]
-	game.Restart()
+	if game == nil {
+		w.WriteHeader(400)
+		return
+	}
 
+	game.Restart()
 	render(w, "game", game)
 }
