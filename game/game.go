@@ -78,8 +78,9 @@ func (g *Game) Tick(action actions.Action) {
 		}
 
 		if g.State[pos.x][pos.y] != "E" {
-			panic("AHHH")
+			panic("Should never happen")
 		}
+
 		g.State[pos.x][pos.y] = g.CurrentTetrominoes.symbol
 	}
 

@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"tetris/game"
 	"tetris/game/actions"
+	"tetris/views"
 )
 
 var games = make(map[string]*game.Game)
@@ -13,11 +14,12 @@ func Root(w http.ResponseWriter, _ *http.Request) {
 	g := game.NewGame()
 	// TODO: Game instance per ip or session
 	games["ip"] = g
-	render(w, "index", g)
+	views.Render(w, "index", g)
 }
 
 func Tick(w http.ResponseWriter, r *http.Request) {
 	game := games["ip"]
+	// TODO: Middleware to handle bad requests
 	if game == nil {
 		w.WriteHeader(400)
 		return
@@ -32,19 +34,20 @@ func Tick(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if game.GameOver {
-		w.WriteHeader(286) // stops HTMX polling
+		w.WriteHeader(286) // Special status code that stops HTMX polling
 	}
 
-	render(w, "state", game)
+	views.Render(w, "state", game)
 }
 
 func Restart(w http.ResponseWriter, _ *http.Request) {
 	game := games["ip"]
+	// TODO: This too
 	if game == nil {
 		w.WriteHeader(400)
 		return
 	}
 
 	game.Restart()
-	render(w, "game", game)
+	views.Render(w, "game", game)
 }
