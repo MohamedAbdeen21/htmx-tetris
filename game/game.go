@@ -62,13 +62,15 @@ func (g *Game) Tick(action actions.Action) {
 		g.State[pos.x][pos.y] = "E"
 	}
 
+	collided := false
+
 	switch action {
 	case actions.Left:
 		g.PieceLeft()
 	case actions.Right:
 		g.PieceRight()
 	case actions.Down:
-		g.PieceDown()
+		collided = g.PieceDown()
 	}
 
 	// add piece to next buffer
@@ -86,12 +88,12 @@ func (g *Game) Tick(action actions.Action) {
 
 	// piece collided, remove to spawn a new piece and check
 	// if any rows are completed
-	if g.HasCollided() {
+	if collided {
 		g.checkGameOver()
 		g.checkCompletedRows()
 		g.CurrentTetrominoes = nil
 	}
-	// g.Display()
+
 }
 
 func (g *Game) Display() {
@@ -106,32 +108,6 @@ func (g *Game) Display() {
 	for _, pos := range g.CurrentTetrominoes.positions {
 		log.Print(pos.x, pos.y)
 	}
-}
-
-func (g *Game) HasCollided() bool {
-	current_positions := make(map[[2]int]bool)
-	for _, pos := range g.CurrentTetrominoes.positions {
-		current_positions[[2]int{pos.x, pos.y}] = true
-	}
-
-	for _, pos := range g.CurrentTetrominoes.positions {
-		if pos.x < -1 {
-			continue
-		}
-
-		// colided with the base
-		if pos.x == HEIGHT-1 {
-			return true
-		}
-
-		// collided with a piece that is not self
-		own_piece := current_positions[[2]int{pos.x + 1, pos.y}]
-		if !own_piece && g.State[pos.x+1][pos.y] != "E" {
-			return true
-		}
-	}
-
-	return false
 }
 
 func (g *Game) checkGameOver() {
@@ -172,19 +148,21 @@ func (g *Game) checkCompletedRows() {
 	g.Score += bonus
 }
 
-func (g *Game) PieceDown() {
+func (g *Game) PieceDown() bool {
 	for _, pos := range g.CurrentTetrominoes.positions {
 		if pos.x < -1 {
 			continue
 		}
 		if pos.x == HEIGHT-1 || g.State[pos.x+1][pos.y] != "E" {
-			return
+			return true
 		}
 	}
 
 	for _, pos := range g.CurrentTetrominoes.positions {
 		pos.x++
 	}
+
+	return false
 }
 
 func (g *Game) PieceLeft() {

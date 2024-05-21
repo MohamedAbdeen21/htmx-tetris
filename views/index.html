@@ -18,7 +18,7 @@
 	<script>
 		document.body.addEventListener('htmx:configRequest', (event) => {
 			if (event.detail.triggeringEvent == null) {
-				return // triggered by the 'every' event 
+				return // triggered by the 'every' event
 			}
 
 			event.detail.headers['Action'] = event.detail.triggeringEvent.key

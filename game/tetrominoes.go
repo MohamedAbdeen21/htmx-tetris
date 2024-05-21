@@ -6,11 +6,11 @@ import (
 
 var pieces = []TType{
 	newTType('I', 20),
-	newTType('Z', 15),
+	newTType('Z', 10),
 	newTType('J', 20),
 	newTType('L', 20),
 	newTType('O', 20),
-	newTType('S', 15),
+	newTType('S', 10),
 	newTType('T', 5), // I hate T shapes, or maybe it's just a skill issue
 }
 

@@ -21,7 +21,7 @@ func init() {
 	}
 }
 
-func Render(w http.ResponseWriter, block string, data interface{}) {
+func Render(w http.ResponseWriter, block string, data any) {
 	if err := tmpl.ExecuteTemplate(w, block, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
