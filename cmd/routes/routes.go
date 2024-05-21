@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"log"
 	"net/http"
 	"tetris/game"
 	"tetris/game/actions"
@@ -10,14 +11,16 @@ import (
 var games = make(map[string]*game.Game)
 
 func Root(w http.ResponseWriter, _ *http.Request) {
+	log.Printf("Started a new Game")
 	// TODO: Middleware to stop longest match
 	g := game.NewGame()
 	// TODO: Game instance per ip or session
 	games["ip"] = g
-	views.Render(w, "index", g)
+	views.Render(w, "index", g, 200)
 }
 
-func Tick(w http.ResponseWriter, r *http.Request) {
+func Tick(w http.ResponseWriter, action string) {
+	log.Printf("Tick got action %s", action)
 	game := games["ip"]
 	// TODO: Middleware to handle bad requests
 	if game == nil {
@@ -25,19 +28,19 @@ func Tick(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	action := r.Header["Action"]
-
-	if len(action) == 0 {
+	if action == "" {
 		game.Tick(actions.Down)
 	} else {
-		game.Tick(actions.Action(action[0]))
+		game.Tick(actions.Action(action))
 	}
 
 	if game.GameOver {
-		w.WriteHeader(286) // Special status code that stops HTMX polling
+		// Special status code that stops HTMX polling
+		views.Render(w, "state", game, 286)
+		return
 	}
 
-	views.Render(w, "state", game)
+	views.Render(w, "state", game, 200)
 }
 
 func Restart(w http.ResponseWriter, _ *http.Request) {
@@ -49,5 +52,5 @@ func Restart(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	game.Restart()
-	views.Render(w, "game", game)
+	views.Render(w, "game", game, 200)
 }
